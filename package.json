@@ -1,0 +1,22 @@
+{
+  "name": "fund-distributor",
+  "version": "1.0.0",
+  "description": "A TypeScript CLI function to distribute funds across target accounts",
+  "main": "index.js",
+  "scripts": {
+  "start": "ts-node src/index.ts",
+  "build": "tsc",
+  "test": "jest"
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.3.3",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
