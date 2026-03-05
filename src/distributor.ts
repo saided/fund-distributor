@@ -9,7 +9,7 @@ export type Mode = "even" | "custom";
 
 
  export interface Account{
-    id: String,
+    id: string,
     balance: Cents
  }
 
@@ -94,9 +94,52 @@ export function distributeFunds(
     sourceBalance: source.balance,
     distributions
   };
-}
+    } else {
+      //validations for custom
+      const targets = ["target-001", "target-002", "target-003"];
+      if (Object.keys(req.allocationsByTargetCents).length === 0) {
+        throw new Error("Allocation targets must not be empty")
+      }
+
+      Object.keys(req.allocationsByTargetCents).forEach(key => {
+        if (!targets.includes(key)) {
+          throw new Error(`Invalid target account ID: "${key}".`)
+        }
+      });
+
+      Object.values(req.allocationsByTargetCents).forEach(amnt => {
+        if (amnt !== undefined && amnt <= 0) {
+          throw new Error("Each amount must be greater than zero.")
+        }
+      });
+
+      const totalAmnt = Object.values(req.allocationsByTargetCents)
+        .reduce((a, b) => a + (b ?? 0), 0);
+      if (totalAmnt > source.balance) {
+        throw new Error("Sum of amounts cannot exceed source balance.")
+      }
+
+      //core logic for custom mode
+      const distributions: { accountId: AccountId; amount: Cents }[] = [];
+      Object.keys(req.allocationsByTargetCents).forEach((key) => {
+        const amount = req.allocationsByTargetCents[key as AccountId] ?? 0;
+        targetsById[key as AccountId].balance += amount;
+        distributions.push({accountId : key as AccountId,  amount })
+        //source.balance -= amount;
+      })
+
+      source.balance -= totalAmnt;
+
+      return {
+        sourceBalance: source.balance,
+        distributions
+      };
+    }
 
 
-    return {} as DistributionResult;
     
 };
+
+export function centsToDollars(cents: Cents): string {
+  return `$${(cents / 100).toFixed(2)}`;
+}
