@@ -4,10 +4,10 @@
   "description": "A TypeScript CLI function to distribute funds across target accounts",
   "main": "index.js",
   "scripts": {
-  "start": "ts-node src/index.ts",
-  "build": "tsc",
-  "test": "jest"
-},
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "test": "jest"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
